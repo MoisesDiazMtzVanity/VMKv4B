@@ -1,0 +1,22 @@
+{
+  "name": "pruebaconnection",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "fast-csv": "^5.0.5",
+    "luxon": "^3.7.1",
+    "mysql2": "^3.14.3",
+    "pdfkit": "^0.17.1"
+  }
+}
