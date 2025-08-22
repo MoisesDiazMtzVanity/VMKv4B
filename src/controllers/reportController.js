@@ -93,13 +93,20 @@ exports.downloadReportPDF = async (req, res) => {
       doc.font("Helvetica").text(`${orden.date_added}`, { width: infoWidth }); infoY += 18;
       doc.fontSize(10).font("Helvetica-Bold").text(`Email: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
       doc.font("Helvetica").text(`${orden.email}`, { width: infoWidth }); infoY += 18;
-      doc.fontSize(10).font("Helvetica-Bold").text(`No. Cliente Proscai: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
-      doc.font("Helvetica").text(`${orden.clicod}`, { width: infoWidth }); infoY += 18;
-      // Customer
-      orden.customer.forEach((c, i) => {
+      
+      if (orden.clicod && orden.clicod.trim() !== '' && orden.clinom && orden.clinom.trim() !== '') {
+        doc.fontSize(10).font("Helvetica-Bold").text(`No. Cliente Proscai: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
+        doc.font("Helvetica").text(`${orden.clicod}`, { width: infoWidth }); infoY += 18;
         doc.fontSize(10).font("Helvetica-Bold").text(`Cliente: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
-        doc.font("Helvetica").text(`${c.firstname} ${c.lastname}`, { width: infoWidth }); infoY += 18;
-      });
+        doc.font("Helvetica").text(`${orden.clinom}`, { width: infoWidth }); infoY += 18;
+      } else {
+        doc.fontSize(10).font("Helvetica-Bold").text(`No solicita factura`, rightXAdjusted, infoY, { width: infoWidth }); infoY += 18;
+      }
+      // Customer
+      // orden.customer.forEach((c, i) => {
+      //   doc.fontSize(10).font("Helvetica-Bold").text(`Cliente: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
+      //   doc.font("Helvetica").text(`${c.firstname} ${c.lastname}`, { width: infoWidth }); infoY += 18;
+      // });
       doc.y = Math.max(topY + 80, infoY) + 10;
     // Determinar la altura Y para ambos elementos (al mismo nivel)
     doc.moveDown(1);

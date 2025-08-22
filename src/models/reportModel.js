@@ -100,23 +100,42 @@ module.exports = {
       }
     }
 
-    let rfc = null;
-    if (ecvntyResult && ecvntyResult.length > 0 && ecvntyResult[0].payment_rfc) {
-      rfc = ecvntyResult[0].payment_rfc;
-    }
-
-    // Consulta en 'proscai' usando el RFC obtenido
-    const proscaiQuery = "SELECT fcli.clicod FROM fcli WHERE fcli.clirfc = ?";
-    const proscaiResult = await queryDB(dbConfigs.proscai, proscaiQuery, [rfc]);
-
-    // Si hay resultados en proscai, tomar el primer clicod
-    let clicod = null;
-    if (proscaiResult && proscaiResult.length > 0 && proscaiResult[0].clicod) {
-      clicod = proscaiResult[0].clicod;
-    }
-
     const ordenes = {};
-    ecvntyResult.forEach((item) => {
+    
+    // Crear un mapa para cachear consultas de RFC para evitar consultas duplicadas
+    const rfcCache = {};
+    
+    for (const item of ecvntyResult) {
+      // Obtener RFC para esta orden específica
+      const rfc = item.payment_rfc;
+      
+      // Consultar datos de Proscai para este RFC específico (usar caché si ya se consultó)
+      let clicod = '';
+      let clinom = '';
+      
+      if (rfc && rfc.trim() !== '') {
+        if (!rfcCache[rfc]) {
+          // Consulta en 'proscai' usando el RFC obtenido
+          const proscaiQuery = "SELECT fcli.clicod, fcli.clinom FROM fcli WHERE fcli.clirfc = ?";
+          const proscaiResult = await queryDB(dbConfigs.proscai, proscaiQuery, [rfc]);
+          
+          if (proscaiResult && proscaiResult.length > 0 && proscaiResult[0].clicod) {
+            rfcCache[rfc] = {
+              clicod: proscaiResult[0].clicod,
+              clinom: proscaiResult[0].clinom
+            };
+          } else {
+            rfcCache[rfc] = {
+              clicod: '',
+              clinom: ''
+            };
+          }
+        }
+        
+        clicod = rfcCache[rfc].clicod;
+        clinom = rfcCache[rfc].clinom;
+      }
+      
       let formattedDate = null;
       if (item.date_added) {
         let dt;
@@ -172,6 +191,7 @@ module.exports = {
         ];
         ordenes[keyOrd] = {
           clicod,
+            clinom,
           order_id: item.order_id,
           invoice_no: item.invoice_no,
           date_added: formattedDate,
@@ -192,7 +212,7 @@ module.exports = {
         quantity: item.quantity,
         total: Number(item.total).toFixed(2),
       });
-    });
+    }
 
     return {
       ecvnty: Object.values(ordenes),
