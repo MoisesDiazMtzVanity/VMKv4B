@@ -93,12 +93,12 @@ exports.downloadReportPDF = async (req, res) => {
       doc.font("Helvetica").text(`${orden.date_added}`, { width: infoWidth }); infoY += 18;
       doc.fontSize(10).font("Helvetica-Bold").text(`Email: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
       doc.font("Helvetica").text(`${orden.email}`, { width: infoWidth }); infoY += 18;
+      doc.fontSize(10).font("Helvetica-Bold").text(``, rightXAdjusted, infoY, { continued: true, width: infoWidth });
+      doc.font("Helvetica").text(`${orden.payment_method}`, { width: infoWidth }); infoY += 18;
       
-      if (orden.clicod && orden.clicod.trim() !== '' && orden.clinom && orden.clinom.trim() !== '') {
+      if (orden.clicod && orden.clicod.trim() !== '') {
         doc.fontSize(10).font("Helvetica-Bold").text(`No. Cliente Proscai: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
         doc.font("Helvetica").text(`${orden.clicod}`, { width: infoWidth }); infoY += 18;
-        doc.fontSize(10).font("Helvetica-Bold").text(`Cliente: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
-        doc.font("Helvetica").text(`${orden.clinom}`, { width: infoWidth }); infoY += 18;
       } else {
         doc.fontSize(10).font("Helvetica-Bold").text(`No solicita factura`, rightXAdjusted, infoY, { width: infoWidth }); infoY += 18;
       }
@@ -127,7 +127,6 @@ exports.downloadReportPDF = async (req, res) => {
       let factY = boxTopY + 25;
       const factStartY = factY;
       orden.payment.forEach((p) => {
-        doc.font("Helvetica").text(`${p.payment_method}`, boxLeftX + 10, factY, { width: boxWidth - 20, lineBreak: false }); factY += 15;
         doc.font("Helvetica").text(`${p.payment_company && p.payment_company.trim() !== '' ? p.payment_company : 'N/A'}`, boxLeftX + 10, factY, { width: boxWidth - 20, lineBreak: false }); factY += 15;
         doc.font("Helvetica-Bold").text("RFC: ", boxLeftX + 10, factY, { continued: true });
         doc.font("Helvetica").text(p.payment_rfc && p.payment_rfc.trim() !== '' ? p.payment_rfc : 'N/A', { width: boxWidth - 50, lineBreak: false }); factY += 15;

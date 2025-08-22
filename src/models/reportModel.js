@@ -157,7 +157,6 @@ module.exports = {
       if (!ordenes[keyOrd]) {
         const payment = [
           {
-            payment_method: item.payment_method,
             payment_company: item.payment_company,
             payment_rfc: item.payment_rfc,
             payment_address_1: item.payment_address_1,
@@ -191,11 +190,11 @@ module.exports = {
         ];
         ordenes[keyOrd] = {
           clicod,
-            clinom,
           order_id: item.order_id,
           invoice_no: item.invoice_no,
           date_added: formattedDate,
           email: item.email,
+          payment_method: item.payment_method,
           productos: [],
           payment,
           shipping,
