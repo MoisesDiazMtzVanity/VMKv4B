@@ -77,7 +77,7 @@ VMKv4B/
 
 1. **Clonar el repositorio**
    ```bash
-   git clone git@github.com:MoisesDiazMtzVanity/MaryKey.git
+   git clone git@github.com:MoisesDiazMtzVanity/VMKv4B.git
    cd VMKv4B
    ```
 
