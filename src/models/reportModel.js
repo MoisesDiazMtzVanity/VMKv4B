@@ -62,8 +62,6 @@ module.exports = {
     \`order\`.shipping_city,
     \`order\`.shipping_postcode,
     \`order\`.shipping_zone,
-    \`customer\`.firstname, 
-    \`customer\`.lastname, 
     \`order\`.order_status_id, 
     \`order_product\`.model, 
     \`order_product\`.name,
@@ -73,7 +71,6 @@ module.exports = {
     FROM \`order\`
     INNER JOIN \`order_product\` ON (\`order\`.order_id = \`order_product\`.order_id)
     LEFT JOIN \`order_option\` ON (\`order_option\`.order_product_id = \`order_product\`.order_product_id)
-    INNER JOIN \`customer\` ON (\`customer\`.customer_id = \`order\`.customer_id)
     WHERE \`order\`.order_status_id = 2`;
     const ecvntyParams = [];
     if (params.order_id) {
@@ -116,7 +113,7 @@ module.exports = {
       if (rfc && rfc.trim() !== '') {
         if (!rfcCache[rfc]) {
           // Consulta en 'proscai' usando el RFC obtenido
-          const proscaiQuery = "SELECT fcli.clicod, fcli.clinom FROM fcli WHERE fcli.clirfc = ?";
+          const proscaiQuery = "SELECT fcli.clicod FROM fcli WHERE fcli.clirfc = ?";
           const proscaiResult = await queryDB(dbConfigs.proscai, proscaiQuery, [rfc]);
           
           if (proscaiResult && proscaiResult.length > 0 && proscaiResult[0].clicod) {
@@ -126,8 +123,7 @@ module.exports = {
             };
           } else {
             rfcCache[rfc] = {
-              clicod: '',
-              clinom: ''
+              clicod: ''
             };
           }
         }
@@ -182,12 +178,6 @@ module.exports = {
             shipping_country: item.shipping_country,
           },
         ];
-        const customer = [
-          {
-            firstname: item.firstname,
-            lastname: item.lastname,
-          },
-        ];
         ordenes[keyOrd] = {
           clicod,
           order_id: item.order_id,
@@ -198,7 +188,6 @@ module.exports = {
           productos: [],
           payment,
           shipping,
-          customer,
           total: Number(item.total).toFixed(2),
           order_total: orderTotalsMap[item.order_id] || []
         };

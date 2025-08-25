@@ -102,28 +102,18 @@ exports.downloadReportPDF = async (req, res) => {
       } else {
         doc.fontSize(10).font("Helvetica-Bold").text(`No solicita factura`, rightXAdjusted, infoY, { width: infoWidth }); infoY += 18;
       }
-      // Customer
-      // orden.customer.forEach((c, i) => {
-      //   doc.fontSize(10).font("Helvetica-Bold").text(`Cliente: `, rightXAdjusted, infoY, { continued: true, width: infoWidth });
-      //   doc.font("Helvetica").text(`${c.firstname} ${c.lastname}`, { width: infoWidth }); infoY += 18;
-      // });
       doc.y = Math.max(topY + 80, infoY) + 10;
     // Determinar la altura Y para ambos elementos (al mismo nivel)
     doc.moveDown(1);
+    // Variables de redimension
     const alignedY = doc.y;
-    
-    // Definir boxTopY aquí antes de usarlo
     const boxTopY = alignedY + 30;
-    
-    // Definir variables de totalY que se necesitan antes
     const totalBoxY = alignedY;
-    let totalY = totalBoxY + 10;
     
-    // Cajas de facturación y envío (sin el total de prendas aquí)
-    
-      // Caja de facturación (solo título, sin borde inicial)
+    // Contenedor de facturación y envío
+      // Caja de facturación
       doc.font("Helvetica-Bold").text("Datos de Facturación", boxLeftX + 5, boxTopY + 5);
-      // Caja de facturación con altura dinámica
+      // Caja de facturación
       let factY = boxTopY + 25;
       const factStartY = factY;
       orden.payment.forEach((p) => {
@@ -146,11 +136,11 @@ exports.downloadReportPDF = async (req, res) => {
         doc.font("Helvetica").text(p.payment_postcode && p.payment_postcode.trim() !== '' ? p.payment_postcode : 'N/A', { width: 80, lineBreak: false }); factY += 15;
       });
       
-      // Calcular altura dinámica de la caja de facturación (agregar más padding)
+      // Calcular altura dinámica de la caja de facturación
       const factHeight = Math.max(factY - boxTopY + 15, 80);
       doc.rect(boxLeftX, boxTopY, boxWidth, factHeight).stroke();
 
-      // Envío con altura dinámica (solo título, sin borde inicial)
+      // Caja de envío
       doc.font("Helvetica-Bold").text("Datos de Envío", boxRightX + 5, boxTopY + 5);
       let envY = boxTopY + 25;
       const envStartY = envY;
@@ -171,8 +161,8 @@ exports.downloadReportPDF = async (req, res) => {
         doc.font("Helvetica-Bold").text(" Código Postal: ", { continued: true });
         doc.font("Helvetica").text(s.shipping_postcode && s.shipping_postcode.trim() !== '' ? s.shipping_postcode : 'N/A', { width: 80, lineBreak: false }); envY += 15;
       });
-      
-      // Calcular altura dinámica de la caja de envío (agregar más padding)
+
+      // Calcular altura dinámica de la caja de envío
       const envHeight = Math.max(envY - boxTopY + 15, 80);
       doc.rect(boxRightX, boxTopY, boxWidthShipping, envHeight).stroke();
       
@@ -241,15 +231,14 @@ exports.downloadReportPDF = async (req, res) => {
           .lineTo(startX + headers.reduce((a, b) => a + b.width, 0), rowY + 15)
           .stroke();
       });
-      
-    // MOVER: Total de prendas y totales DESPUÉS de la tabla de productos
+
     doc.moveDown(2);
     
-    // Total de prendas a la izquierda
+    // Total de prendas
     const finalY = doc.y;
     doc.fontSize(12).font('Helvetica-Bold').text(`Total de prendas: ${totalProductos}`, margin, finalY, { align: 'left' });
     
-    // Totales a la derecha, alineados a la misma altura
+    // Totales monetarios
     const finalTotalBoxY = finalY;
     let finalTotalY = finalTotalBoxY + 10;
     doc.fontSize(10).font('Helvetica').text(`Sub-Total (Con IVA): $${formatCurrency(subTotalVal)}`, totalBoxX + 10, finalTotalY, { width: totalBoxWidth - 20, align: 'right' });
@@ -261,7 +250,6 @@ exports.downloadReportPDF = async (req, res) => {
     doc.end();
   } catch (error) {
     console.error('Error al generar el reporte:', error);
-    // Solo responder si aún no se han enviado headers (significa que no se creó el PDF)
     if (!res.headersSent) {
       if (error.message && error.message.includes('Debes enviar ambos parámetros de fecha')) {
         res.status(400).json({
