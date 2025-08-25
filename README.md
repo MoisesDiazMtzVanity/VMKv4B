@@ -11,11 +11,7 @@ Sistema de generación automática de reportes PDF para órdenes de surtido de p
 - [Instalación](#instalación)
 - [Uso](#uso)
 - [API Endpoints](#api-endpoints)
-- [Contribución](#contribución)
-- [Pruebas](#pruebas)
 - [Roadmap](#roadmap)
-- [Autores](#autores)
-- [Licencia](#licencia)
 
 ## Descripción
 
