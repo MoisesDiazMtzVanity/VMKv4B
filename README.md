@@ -198,16 +198,6 @@ Content-Disposition: attachment; filename=orden_2406032.pdf
 }
 ```
 
-## 🤝 Contribución
-
-### Proceso de Contribución
-
-1. **Fork** el repositorio
-2. **Crear rama** para tu feature: `git checkout -b feature/nueva-funcionalidad`
-3. **Commit** tus cambios: `git commit -m 'feat: agregar nueva funcionalidad'`
-4. **Push** a la rama: `git push origin feature/nueva-funcionalidad`
-5. **Abrir Pull Request**
-
 ### Convenciones de Código
 
 - **Commits**: Usar [Conventional Commits](https://conventionalcommits.org/)
@@ -223,45 +213,6 @@ Content-Disposition: attachment; filename=orden_2406032.pdf
   - Indentación: 2 espacios
   - Punto y coma al final de línea
   - Nombres descriptivos para variables y funciones
-
-### Ramas
-
-- `main`: Rama principal (estable)
-- `develop`: Rama de desarrollo
-- `feature/*`: Nuevas funcionalidades
-- `hotfix/*`: Correcciones urgentes
-
-## Pruebas
-
-### Ejecutar Pruebas
-
-```bash
-# Ejecutar todas las pruebas
-npm test
-
-# Pruebas con coverage
-npm run test:coverage
-
-# Pruebas en modo watch
-npm run test:watch
-```
-
-### Estructura de Pruebas
-
-```
-tests/
-├── unit/                   # Pruebas unitarias
-│   ├── models/
-│   └── controllers/
-├── integration/            # Pruebas de integración
-└── e2e/                   # Pruebas end-to-end
-```
-
-### Tecnologías de Testing
-
-- **Jest**: Framework de testing
-- **Supertest**: Testing de APIs HTTP
-- **Mock**: Para simular conexiones de BD
 
 ## Roadmap
 
