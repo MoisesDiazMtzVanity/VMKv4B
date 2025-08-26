@@ -39,8 +39,18 @@ module.exports = {
     if (!(params.order_id || (params.startDate && params.endDate))) {
       throw new Error('Debes enviar ambos parámetros de fecha o el ID del Pedido.');
     }
-  // Consulta en 'ecvnty' por rango de fechas o por order_id exacto
-  let ecvntyQuery = `SELECT \`order\`.order_id, 
+
+    // Ajustar horas de fechas si se envían
+    let startDate = params.startDate;
+    let endDate = params.endDate;
+    if (startDate && endDate) {
+      // Usar luxon para asegurar formato correcto
+      startDate = DateTime.fromISO(startDate).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss');
+      endDate = DateTime.fromISO(endDate).endOf('day').toFormat('yyyy-MM-dd HH:mm:ss');
+    }
+
+    // Consulta en 'ecvnty' por rango de fechas o por order_id exacto
+    let ecvntyQuery = `SELECT \`order\`.order_id, 
     \`order\`.invoice_no,
     \`order\`.date_added, 
     \`order\`.payment_method,
@@ -76,9 +86,9 @@ module.exports = {
     if (params.order_id) {
       ecvntyQuery += ' AND `order`.order_id = ?';
       ecvntyParams.push(params.order_id);
-    } else if (params.startDate && params.endDate) {
+    } else if (startDate && endDate) {
       ecvntyQuery += ' AND `order`.date_added BETWEEN ? AND ?';
-      ecvntyParams.push(params.startDate, params.endDate);
+      ecvntyParams.push(startDate, endDate);
     }
     const ecvntyResult = await queryDB(dbConfigs.ecvnty, ecvntyQuery, ecvntyParams);
 
