@@ -16,9 +16,9 @@ exports.downloadReportPDF = async (req, res) => {
   // Definir nombre de archivo según la fecha enviada
   let nombreArchivo = 'orden.pdf';
   if (startDate && endDate) {
-    nombreArchivo = `orden_${startDate}_a_${endDate}.pdf`;
+    nombreArchivo = `ordenes_MK_${startDate}_a_${endDate}.pdf`;
   } else if (order_id) {
-    nombreArchivo = `orden_${order_id}.pdf`;
+    nombreArchivo = `orden_MK_${order_id}.pdf`;
   }
   try {
     const resultados = await ReportModel.getReportData({
