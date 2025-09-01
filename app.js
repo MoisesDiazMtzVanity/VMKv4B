@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const reportRoutes = require("./src/routes/reportRoutes");
 const newProscaiRoutes = require("./src/routes/newProscaiRoutes");
+const authRoutes = require("./src/routes/authRoutes");
 
 app.use(
   cors({
@@ -17,6 +18,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use("/api", authRoutes);
 app.use("/api", reportRoutes);
 app.use("/api", newProscaiRoutes);
 
