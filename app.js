@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const reportRoutes = require("./src/routes/reportRoutes");
+const newProscaiRoutes = require("./src/routes/newProscaiRoutes");
 
 app.use(
   cors({
@@ -17,6 +18,7 @@ app.use(
 
 app.use(express.json());
 app.use("/api", reportRoutes);
+app.use("/api", newProscaiRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
