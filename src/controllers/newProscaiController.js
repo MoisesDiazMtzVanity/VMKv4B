@@ -1,3 +1,27 @@
+  // Descarga un solo CSV con todos (nuevos y existentes)
+exports.downloadAllInvoiceUsersCSV = async (req, res) => {
+  try {
+    const { fechaInicio, fechaFinal } = req.query;
+    if (!fechaInicio || !fechaFinal) {
+      return res.status(400).json({ error: 'Debes enviar fechaInicio y fechaFinal' });
+    }
+    const { nuevos, existentes } = await newProscaiModel.getInvoiceUsersWithClicod(fechaInicio, fechaFinal);
+    const all = [...nuevos, ...existentes];
+    if (!all || all.length === 0) {
+      return res.status(404).json({ error: 'No hay datos para el rango de fechas' });
+    }
+    const columns = [
+      'razon_social', 'calle', 'no_ext', 'no_int', 'colonia', 'alc_mnpo', 'estado', 'cp', 'pais', 'rfc', 'email', 'regime', 'clicod'
+    ];
+    const csv = await writeToString(all, { headers: columns, writeHeaders: true });
+    res.setHeader('Content-Type', 'text/csv');
+    const fileName = `clientes_${fechaInicio}_a_${fechaFinal}.csv`;
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.send(csv);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 const { writeToString } = require('fast-csv');
 exports.downloadInvoiceUsersCSV = async (req, res) => {
   try {
