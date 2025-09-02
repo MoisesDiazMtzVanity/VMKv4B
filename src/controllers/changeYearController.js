@@ -1,5 +1,17 @@
 // controllers/changeYearController.js
-const { updateYear } = require('../models/yearModel');
+const { updateYear, getYear } = require('../models/yearModel');
+// Obtener el año actual
+const getCurrentYear = async (req, res) => {
+  try {
+    const year = await getYear();
+    if (year === null) {
+      return res.status(404).json({ error: "No se encontró el año" });
+    }
+    res.json({ year });
+  } catch (err) {
+    res.status(500).json({ error: "No se pudo obtener el año" });
+  }
+};
 
 const changeYear = async (req, res) => {
   const { year } = req.body;
@@ -14,4 +26,4 @@ const changeYear = async (req, res) => {
   }
 };
 
-module.exports = { changeYear };
+module.exports = { changeYear, getCurrentYear };

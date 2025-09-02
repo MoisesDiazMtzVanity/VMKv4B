@@ -1,5 +1,6 @@
 const PDFDocument = require("pdfkit");
 const ReportModel = require("../models/reportModel");
+const { getYear } = require("../models/yearModel");
 
 // Función helper para formatear números con separadores de miles
 const formatCurrency = (number) => {
@@ -21,6 +22,8 @@ exports.downloadReportPDF = async (req, res) => {
     nombreArchivo = `orden_MK_${order_id}.pdf`;
   }
   try {
+    // Obtener el año dinámicamente
+    const year = await getYear();
     const resultados = await ReportModel.getReportData({
       order_id,
       startDate,
@@ -80,10 +83,9 @@ exports.downloadReportPDF = async (req, res) => {
       const rightXAdjusted = rightX - 30;
       
       // Encabezado personalizado
-    doc.fontSize(16).font("Helvetica-Bold").text("ORDEN DE SURTIDO", leftX, topY, { width: leftBoxWidth, align: "center" });
-    doc.fontSize(16).font("Helvetica-Bold").text("VANITY", leftX, topY + 25, { width: leftBoxWidth, align: "center" });
-    doc.fontSize(16).font("Helvetica-Bold").text("2025 FOR MARY KAY", leftX, topY + 50, { width: leftBoxWidth, align: "center" });
-    // Lado derecho: datos de la orden (desplazados 20px a la izquierda)
+      doc.fontSize(16).font("Helvetica-Bold").text("ORDEN DE SURTIDO", leftX, topY, { width: leftBoxWidth, align: "center" });
+      doc.fontSize(16).font("Helvetica-Bold").text("VANITY", leftX, topY + 25, { width: leftBoxWidth, align: "center" });
+      doc.fontSize(16).font("Helvetica-Bold").text(`${year} FOR MARY KAY`, leftX, topY + 50, { width: leftBoxWidth, align: "center" });
       let infoY = topY;
       doc.fontSize(10).font("Helvetica-Bold").text(`ID Pedido #`, rightXAdjusted, infoY, { continued: true, width: infoWidth });
       doc.font("Helvetica").text(`${orden.order_id}`, { width: infoWidth }); infoY += 18;
