@@ -11,8 +11,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://127.0.0.1:5173",
-      "http://192.168.0.95:5173",
-      "http://192.168.0.100:5173",
+      /^http:\/\/192\.168\.0\.[0-9]{1,3}:5173$/
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
